@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const config = require('./config');
+const config = require('./src/config');
 
 // Initialize Express
 const app = express();
@@ -16,11 +16,11 @@ app.use(cors());
 app.use(express.json());
 
 // Route imports - VERIFY THESE PATHS ARE CORRECT
-const authRoutes = require('./routes/auth.routes');
-const medicationRoutes = require('./routes/medication.routes');
-const doseLogRoutes = require('./routes/doseLog.routes');
-const reportRoutes = require('./routes/report.routes');
-const reminderRoutes = require('./routes/reminder.routes');
+const authRoutes = require('./src/routes/auth.routes');
+const medicationRoutes = require('./src/routes/medication.routes');
+const doseLogRoutes = require('./src/routes/doseLog.routes');
+const reportRoutes = require('./src/routes/report.routes');
+const reminderRoutes = require('./src/routes/reminder.routes');
 
 // Routes
 app.use('/api/auth', authRoutes);
