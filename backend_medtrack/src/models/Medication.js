@@ -23,7 +23,7 @@ const MedicationSchema = new mongoose.Schema({
     min: 1,
     max: 10
   },
-  schedule: {
+  scheduledTime: {
     type: [String], // Array of times like ["08:00", "14:00", "20:00"]
     required: true
   },

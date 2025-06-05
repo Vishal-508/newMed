@@ -28,6 +28,8 @@ exports.createMedication = async (req, res, next) => {
 
 exports.getMedication = async (req, res, next) => {
   try {
+
+    console.log("params.id",req.params.id,"userid",req.user.id)
     const medication = await MedicationService.getMedication(
       req.user.id,
       req.params.id

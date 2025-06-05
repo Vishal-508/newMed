@@ -4,37 +4,84 @@ const mongoose = require('mongoose');
  * Handle dose logging requests
  */
 exports.logDose = async (req, res, next) => {
-    try {
-        const { medicationId, scheduledTime, notes } = req.body;
-        const _id = new mongoose.Types.ObjectId().toString();
-        
-        console.log("Request data:", {
-            userId: req.user.id,
-            medicationId,
-            scheduledTime,
-            notes
-        });
-
-        const doseLog = await DoseLogService.logDose(
-            req.user.id,
-            medicationId, 
-            scheduledTime, 
-            notes || '',
-            _id
-        );
-        
-        res.status(201).json({
-            success: true,
-            data: doseLog
-        });
-    } catch (err) {
-        console.error('Controller error:', err);
-        res.status(400).json({
-            success: false,
-            error: err.message
-        });
+  try {
+    const { medicationId, scheduledTime, notes } = req.body;
+    const _id = new mongoose.Types.ObjectId().toString();
+    
+    // Simple format validation in controller
+    if (!/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(scheduledTime)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid time format. Use HH:mm'
+      });
     }
+
+    const doseLog = await DoseLogService.logDose(
+      req.user.id,
+      medicationId, 
+      scheduledTime, 
+      notes || '',
+      _id
+    );
+    
+    res.status(201).json({
+      success: true,
+      data: doseLog
+    });
+  } catch (err) {
+    console.error('Controller error:', err);
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
+  }
 };
+
+
+exports.getMedicationLogs = async (req, res, next) => {
+  try {
+    const logs = await DoseLogService.getMedicationLogs(
+      req.user.id,
+      req.params.medicationId
+    );
+    res.json(logs);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// exports.logDose = async (req, res, next) => {
+//     try {
+//         const { medicationId, scheduledTime, notes } = req.body;
+//         const _id = new mongoose.Types.ObjectId().toString();
+        
+//         console.log("Request data:", {
+//             userId: req.user.id,
+//             medicationId,
+//             scheduledTime,
+//             notes
+//         });
+
+//         const doseLog = await DoseLogService.logDose(
+//             req.user.id,
+//             medicationId, 
+//             scheduledTime, 
+//             notes || '',
+//             _id
+//         );
+        
+//         res.status(201).json({
+//             success: true,
+//             data: doseLog
+//         });
+//     } catch (err) {
+//         console.error('Controller error:', err);
+//         res.status(400).json({
+//             success: false,
+//             error: err.message
+//         });
+//     }
+// };
 
 exports.getLogs = async (req, res, next) => {
   try {
@@ -70,7 +117,27 @@ exports.updateLog = async (req, res, next) => {
 
 
 
+exports.getAdherenceStats = async (req, res, next) => {
+  try {
+    const stats = await DoseLogService.getAdherenceStats(req.user.id);
+    res.json(stats);
+  } catch (err) {
+    next(err);
+  }
+};
 
+exports.getRecentLogs = async (req, res, next) => {
+  try {
+    const logs = await DoseLogService.getDoseLogs(
+      req.user.id,
+      moment().subtract(7, 'days').format('YYYY-MM-DD'),
+      moment().format('YYYY-MM-DD')
+    );
+    res.json(logs);
+  } catch (err) {
+    next(err);
+  }
+};
 
 
 

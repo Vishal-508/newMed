@@ -19,5 +19,9 @@ router.get('/getLogs', doseLogController.getLogs);
 
 // Update log (for adding notes, etc.)
 router.patch('/:id', doseLogController.updateLog);
+// Add these new routes after existing ones
+router.get('/stats', doseLogController.getAdherenceStats);
+router.get('/recent', doseLogController.getRecentLogs);
+router.get('/medication/:medicationId', doseLogController.getMedicationLogs);
 
 module.exports = router;

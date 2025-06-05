@@ -57,6 +57,7 @@ class MedicationService {
    */
   static async getMedication(userId, medicationId) {
     try {
+        console.log("params.id",medicationId,"userid",userId)
       const medication = await Medication.findOne({
         _id: medicationId,
         userId
